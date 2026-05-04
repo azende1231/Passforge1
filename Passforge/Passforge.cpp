@@ -6,9 +6,8 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include <algorithim> //This is to remove spaceces
-#include <cstdlib> //This is for rand() and srand()
-#include <ctime>
+#include <algorithim> //This is to remove spaces
+#include <cstdlib> //This is for rand and srand
 
 using namespace std;
 class User
