@@ -14,4 +14,11 @@ using namespace std;
 
 class Questionaire{
 
+private:
+  vector <string> stringQuestions;
+  vector <string> intquestions;
+  vector <string> cleanStringAnswers;
+  vector <string> cleanIntAnswers;
+
+public:
 
