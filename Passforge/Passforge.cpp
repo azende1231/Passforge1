@@ -6,6 +6,12 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <algorithim> //This is to remove spaceces
+#include <cstdlib> //This is for rand() and srand()
+#include <ctime>
 
 using namespace std;
+
+class Questionaire{
+
 
