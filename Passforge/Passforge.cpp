@@ -3,7 +3,8 @@
 
 #include <iostream>
 #include <fstream>
-#include <sting>
+#include <string>
+#include <vector>
 
 using namespace std;
 
