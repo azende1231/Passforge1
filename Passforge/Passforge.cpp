@@ -6,7 +6,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include <algorithim> //This is to remove spaces
+#include <algorithm> //This is to remove spaces
 #include <cstdlib> //This is for rand and srand
 
 using namespace std;
@@ -42,24 +42,6 @@ public:
 };
 
 void login(vector<User>& users, int& liu);
-
-int main()
-{
-    vector<User> users;
-    int liu = -1; // logged in user index
-
-    users.push_back(User("215", "Family123", "Dom", "Toretto"));
-    users.push_back(User("U1002", "CatLover_22", "John", "Brown"));
-
-    login(users, liu);
-
-    cout << "Welcome to the system, "
-         << users.at(liu).getFname() << " "
-         << users.at(liu).getLname() << "!" << endl;
-
-    return 0;
-}
-
 void login(vector<User>& users, int& liu)
 {
     string entID = "";
@@ -228,15 +210,26 @@ public:
         return cleanIntAnswers; 
     }
 };
-int main() {
-    Questionnaire q;
+int main()
+{
+    vector<User> users;
+    int liu = -1; // logged in user index
+
+    users.push_back(User("215", "Family123", "Dom", "Toretto"));
+    users.push_back(User("U1002", "CatLover_22", "John", "Brown"));
+
+    login(users, liu);
+
+    cout << "Welcome to the system, "
+         << users.at(liu).getFname() << " "
+         << users.at(liu).getLname() << "!" << endl;
+Questionnaire q;
     
-    if (q.loadFiles("Questions_string.csv", "Questionsint.csv")) {
+    if (q.loadFiles("Questions_string", "Questionsint")) {
         q.debugPrintCount();
         q.runSurvey(); 
     }
 
     return 0;
 }
-
 
