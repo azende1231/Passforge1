@@ -231,7 +231,7 @@ public:
 int main() {
     Questionnaire q;
     
-    if (q.loadFiles("Questions.csv", "Questionsint.csv")) {
+    if (q.loadFiles("Questions_string.csv", "Questionsint.csv")) {
         q.debugPrintCount();
         q.runSurvey(); 
     }
