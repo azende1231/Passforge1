@@ -9,7 +9,6 @@
 #include <algorithim> //This is to remove spaces
 #include <cstdlib> //This is for rand and srand
 
-
 using namespace std;
 class User
 {
@@ -126,7 +125,7 @@ public:
     // ==========================================
     // 1. Load Questions from Two Separate Files
     // ==========================================
-    bool loadFiles(string Questions.csv , string Questionsint.csv ) {
+    bool loadFiles(string stringFilename, string intFilename) {
         string line;
 
         // --- Load the String Questions ---
@@ -142,7 +141,9 @@ public:
             cout << "[ERROR] Could not open " << stringFilename << endl;
             return false; 
         }
-ifstream iFile(Questionsint.csv);
+
+        // --- Load the Integer Questions ---
+        ifstream iFile(intFilename); // <--- Use the generic variable here
         if (iFile.is_open()) {
             while (getline(iFile, line)) {
                 if (!line.empty()) {
@@ -157,3 +158,85 @@ ifstream iFile(Questionsint.csv);
 
         return true; // Successfully loaded both files
     }
+// Helper function to check if files loaded correctly
+    void debugPrintCount() {
+        cout << "[SUCCESS] Loaded " << stringQuestions.size() << " String Questions and ";
+        cout << intQuestions.size() << " Integer Questions." << endl;
+    }
+
+    // ==========================================
+    // 2. Helper Function: Remove Spaces
+    // ==========================================
+    string removeSpaces(string input) {
+        // Removes all spaces (e.g., "Stranger Things" -> "StrangerThings")
+        input.erase(remove_if(input.begin(), input.end(), ::isspace), input.end());
+        return input;
+    }
+
+    // ==========================================
+    // 3. Run the Survey
+    // ==========================================
+    void runSurvey() {
+        // Clear previous answers in case the user hit "redo"
+        cleanStringAnswers.clear();
+        cleanIntAnswers.clear();
+
+        cout << "\n=======================================" << endl;
+        cout << "   PassForge Questionnaire Initialization   " << endl;
+        cout << " Type 'skip' if you wish to bypass a question." << endl;
+        cout << "=======================================\n" << endl;
+
+        string answer;
+
+        // Ask 3 Random String Questions
+        for (int i = 0; i < 3; i++) {
+            int randomIndex = rand() % stringQuestions.size();
+            cout << stringQuestions[randomIndex] << " ";
+            
+            // 'ws' clears any leftover newlines in the input buffer
+            getline(cin >> ws, answer); 
+
+            if (answer != "skip" && answer != "Skip") {
+                cleanStringAnswers.push_back(removeSpaces(answer));
+            }
+        }
+
+        // Ask 2 Random Integer Questions
+        for (int i = 0; i < 2; i++) {
+            int randomIndex = rand() % intQuestions.size();
+            cout << intQuestions[randomIndex] << " ";
+            
+            getline(cin >> ws, answer);
+
+            if (answer != "skip" && answer != "Skip") {
+                // We keep it as a string so the Generator can easily shuffle the characters later
+                cleanIntAnswers.push_back(removeSpaces(answer));
+            }
+        }
+        
+        cout << "\n[SUCCESS] Questionnaire Complete. Data cleaned and prepared for PassForge." << endl;
+    }
+
+    // ==========================================
+    // 4. Getters for the Generator Class
+    // ==========================================
+    vector<string> getStringAnswers() { 
+        return cleanStringAnswers; 
+    }
+    
+    vector<string> getIntAnswers() { 
+        return cleanIntAnswers; 
+    }
+};
+int main() {
+    Questionnaire q;
+    
+    if (q.loadFiles("Questions.csv", "Questionsint.csv")) {
+        q.debugPrintCount();
+        q.runSurvey(); 
+    }
+
+    return 0;
+}
+
+
