@@ -106,13 +106,37 @@ void login(vector<User>& users, int& liu)
 }
 /****************************************************************************************************
   questionaire ***************************************************************************8**********/
-class Questionaire{
 
 private:
-  vector <string> stringQuestions;
-  vector <string> intquestions;
-  vector <string> cleanStringAnswers;
-  vector <string> cleanIntAnswers;
+    vector<string> stringQuestions;
+    vector<string> intQuestions;
+    
+    // Store the cleaned answers ready for the generator
+    vector<string> cleanStringAnswers;
+    vector<string> cleanIntAnswers;
 
 public:
+    // Constructor automatically seeds the random number generator
+    Questionnaire() {
+        srand(time(0)); 
+    }
 
+    // ==========================================
+    // 1. Load Questions from Two Separate Files
+    // ==========================================
+    bool loadFiles(string stringFilename, string intFilename) {
+        string line;
+
+        // --- Load the String Questions ---
+        ifstream sFile(stringFilename);
+        if (sFile.is_open()) {
+            while (getline(sFile, line)) {
+                if (!line.empty()) {
+                    stringQuestions.push_back(line);
+                }
+            }
+            sFile.close();
+        } else {
+            cout << "[ERROR] Could not open " << stringFilename << endl;
+            return false; 
+        }
