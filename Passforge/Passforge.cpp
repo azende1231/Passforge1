@@ -1,13 +1,14 @@
 // Passforge.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include <ctime>
+#include <ctime> // this is for time
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <algorithim> //This is to remove spaces
 #include <cstdlib> //This is for rand and srand
+
 
 using namespace std;
 class User
@@ -107,6 +108,7 @@ void login(vector<User>& users, int& liu)
 /****************************************************************************************************
   questionaire ***************************************************************************8**********/
 
+class Questionnaire {
 private:
     vector<string> stringQuestions;
     vector<string> intQuestions;
@@ -124,7 +126,7 @@ public:
     // ==========================================
     // 1. Load Questions from Two Separate Files
     // ==========================================
-    bool loadFiles(string stringFilename, string intFilename) {
+    bool loadFiles(string Questions.csv , string Questionsint.csv ) {
         string line;
 
         // --- Load the String Questions ---
@@ -140,3 +142,18 @@ public:
             cout << "[ERROR] Could not open " << stringFilename << endl;
             return false; 
         }
+ifstream iFile(Questionsint.csv);
+        if (iFile.is_open()) {
+            while (getline(iFile, line)) {
+                if (!line.empty()) {
+                    intQuestions.push_back(line);
+                }
+            }
+            iFile.close();
+        } else {
+            cout << "[ERROR] Could not open " << intFilename << endl;
+            return false;
+        }
+
+        return true; // Successfully loaded both files
+    }
