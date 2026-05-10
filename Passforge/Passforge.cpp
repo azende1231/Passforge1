@@ -210,6 +210,61 @@ public:
         return cleanIntAnswers; 
     }
 };
+// ==========================================
+// PassForge Password Generator Class
+// ==========================================
+class PasswordGenerator {
+private:
+    string generatedPassword;
+    string specialChars = "!@#$%^&*";
+
+public:
+    // This function takes the cleaned answers from the Questionnaire
+    void forgePassword(vector<string> stringAnswers, vector<string> intAnswers) {
+        
+        string baseWord = "";
+        string numberPart = "";
+        
+        // 1. Pick one random word from their survey answers
+        if (!stringAnswers.empty()) {
+            int randStringIdx = rand() % stringAnswers.size();
+            baseWord = stringAnswers[randStringIdx];
+        }
+
+        // 2. Pick one random number from their integer answers
+        if (!intAnswers.empty()) {
+            int randIntIdx = rand() % intAnswers.size();
+            numberPart = intAnswers[randIntIdx];
+        }
+
+        // 3. Pick a random special character
+        char specialChar = specialChars[rand() % specialChars.length()];
+
+        // 4. MASH THEM TOGETHER (e.g., "Harrypotter" + "2009" + "!")
+        generatedPassword = baseWord + numberPart + specialChar;
+
+        // 5. SIZE CONTROL (Must be 8 to 16 characters)
+        if (generatedPassword.length() > 16) {
+            // If it's too long, chop it down to exactly 16 characters
+            generatedPassword = generatedPassword.substr(0, 16);
+            
+            // Force the last character to be the special character for security
+            generatedPassword[15] = specialChar; 
+        } 
+        else if (generatedPassword.length() < 8) {
+            // If it's too short, pad it with extra random numbers until it reaches 8
+            while (generatedPassword.length() < 8) {
+                generatedPassword += to_string(rand() % 10); 
+            }
+        }
+
+        // 6. Print the final result!
+        cout << "\n==================================================" << endl;
+        cout << " [PASSFORGE] Your custom secure password is: " << generatedPassword << endl;
+        cout << "==================================================\n" << endl;
+    }
+};
+
 int main()
 {
     vector<User> users;
@@ -232,4 +287,3 @@ Questionnaire q;
 
     return 0;
 }
-
