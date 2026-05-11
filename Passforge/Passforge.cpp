@@ -283,6 +283,10 @@ Questionnaire q;
     if (q.loadFiles("Questions_string", "Questionsint")) {
         q.debugPrintCount();
         q.runSurvey(); 
+
+    // Generated questions// 
+    pg.forgePassword (q.getStringAnswer (), q.getIntAnswers () ;
+        
     }
 
     return 0;
