@@ -159,7 +159,6 @@ public:
     // 3. Run the Survey
     // ==========================================
     void runSurvey() {
-        // Clear previous answers in case the user hit "redo"
         cleanStringAnswers.clear();
         cleanIntAnswers.clear();
 
@@ -170,17 +169,51 @@ public:
 
         string answer;
 
+        // --- NEW: Short term memory for String questions ---
+        vector<int> usedStrings; 
+        
         // Ask 3 Random String Questions
         for (int i = 0; i < 3; i++) {
-            int randomIndex = rand() % stringQuestions.size();
-            cout << stringQuestions[randomIndex] << " ";
+            int randomIndex;
             
-            // 'ws' clears any leftover newlines in the input buffer
+            // Keep picking a random number UNTIL we find one we haven't used
+            do {
+                randomIndex = rand() % stringQuestions.size();
+            } while (count(usedStrings.begin(), usedStrings.end(), randomIndex) > 0);
+            
+            usedStrings.push_back(randomIndex); // Remember it for next time!
+
+            cout << stringQuestions[randomIndex] << " ";
             getline(cin >> ws, answer); 
 
             if (answer != "skip" && answer != "Skip") {
                 cleanStringAnswers.push_back(removeSpaces(answer));
             }
+        }
+
+        // --- NEW: Short term memory for Integer questions ---
+        vector<int> usedInts;
+
+        // Ask 2 Random Integer Questions
+        for (int i = 0; i < 2; i++) {
+            int randomIndex;
+            
+            do {
+                randomIndex = rand() % intQuestions.size();
+            } while (count(usedInts.begin(), usedInts.end(), randomIndex) > 0);
+            
+            usedInts.push_back(randomIndex);
+
+            cout << intQuestions[randomIndex] << " ";
+            getline(cin >> ws, answer);
+
+            if (answer != "skip" && answer != "Skip") {
+                cleanIntAnswers.push_back(removeSpaces(answer));
+            }
+        }
+        
+        cout << "\n[SUCCESS] Questionnaire Complete. Data cleaned and prepared for PassForge." << endl;
+    }
         }
 
         // Ask 2 Random Integer Questions
@@ -221,9 +254,21 @@ private:
 public:
     // This function takes the cleaned answers from the Questionnaire
     void forgePassword(vector<string> stringAnswers, vector<string> intAnswers) {
+        // --- NEW: The Fallback Safety Net ---
+        // If they skipped all string questions, force a default word
+        if (stringAnswers.empty()) {
+            stringAnswers.push_back("Passforge"); 
+        }
         
+        // If they skipped all integer questions, force a random 4-digit number
+        if (intAnswers.empty()) {
+            intAnswers.push_back(to_string(rand() % 9000 + 1000)); 
+        }
+        // ------------------------------------
+
         string baseWord = "";
         string numberPart = "";
+        
         
         // 1. Pick one random word from their survey answers
         if (!stringAnswers.empty()) {
@@ -284,8 +329,8 @@ Questionnaire q;
         q.debugPrintCount();
         q.runSurvey(); 
 
-    // Generated questions// 
-    pg.forgePassword (q.getStringAnswer (), q.getIntAnswers () ;
+    PasswordGenerator pg;
+        pg.forgePassword(q.getStringAnswers(), q.getIntAnswers());
         
     }
 
