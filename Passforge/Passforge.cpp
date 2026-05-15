@@ -345,30 +345,44 @@ public:
 
         cout << "\n[SUCCESS] You have selected: " << generatedPassword << endl;
 // ==========================================
-    // Save Password to a Text File
+ // ==========================================
+    // Save Password to a CSV File
     // ==========================================
     void savePassword() {
         char choice;
-        cout << "\nWould you like to save this password to your vault? (Y/N): ";
+        cout << "\nWould you like to save this password to your CSV vault? (Y/N): ";
         cin >> choice;
 
         if (choice == 'Y' || choice == 'y') {
             string accountName;
             cout << "What account is this password for? (e.g., Gmail, Steam): ";
             
-            // cin >> ws clears the buffer so getline doesn't accidentally skip!
+            // Clear the buffer
             getline(cin >> ws, accountName); 
 
-            // 'ios::app' stands for Append. It adds to the bottom of the file 
-            // instead of deleting your old passwords every time it saves!
-            ofstream outFile("MyPasswords.txt", ios::app); 
+            // Step 1: Check if the file already exists
+            // We do this so we know whether to print the "Account,Password" header row
+            ifstream checkFile("MyPasswords.csv");
+            bool isNewFile = !checkFile.is_open(); 
+            if (!isNewFile) checkFile.close(); 
+
+            // Step 2: Open the file in Append mode ('ios::app')
+            ofstream outFile("MyPasswords.csv", ios::app); 
 
             if (outFile.is_open()) {
-                outFile << "Account: " << accountName << " | Password: " << generatedPassword << endl;
+                
+                // If it is a brand new file, create the column headers!
+                if (isNewFile) {
+                    outFile << "Account,Password\n"; 
+                }
+                
+                // Write the data strictly separated by a comma
+                outFile << accountName << "," << generatedPassword << "\n";
+                
                 outFile.close();
-                cout << "[SUCCESS] Password safely encrypted in MyPasswords.txt!" << endl;
+                cout << "[SUCCESS] Password safely logged in MyPasswords.csv!" << endl;
             } else {
-                cout << "[ERROR] System could not open the vault file." << endl;
+                cout << "[ERROR] System could not open the CSV vault." << endl;
             }
         } else {
             cout << "[INFO] Password discarded. Stay safe!" << endl;
