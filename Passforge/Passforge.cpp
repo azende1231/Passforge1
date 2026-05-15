@@ -1,25 +1,103 @@
+#include <ctime> 
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <algorithm> 
+#include <cstdlib> 
+
+using namespace std;
+
+// ==========================================
+// 1. User Class
+// ==========================================
+class User {
+private:
+    string userID;
+    string password;
+    string fname;
+    string lname;
+
+public:
+    User() {
+        userID = "";
+        password = "";
+        fname = "";
+        lname = "";
+    }
+
+    User(string id, string pwd, string f, string l) {
+        userID = id;
+        password = pwd;
+        fname = f;
+        lname = l;
+    }
+
+    string getUserID() { return userID; }
+    string getPassword() { return password; }
+    string getFname() { return fname; }
+    string getLname() { return lname; }
+};
+
+// ==========================================
+// 2. Login Function
+// ==========================================
+void login(vector<User>& users, int& liu) {
+    string entID = "";
+    string entPwd = "";
+    int numAttempts = 0;
+    bool isValid = false;
+
+    do {
+        cout << "Enter User ID: ";
+        cin >> entID;
+
+        cout << "Enter Password: ";
+        cin >> entPwd;
+
+        for (int i = 0; i < users.size(); i++) {
+            if ((entID == users.at(i).getUserID()) &&
+                (entPwd == users.at(i).getPassword())) {
+                isValid = true;
+                liu = i;
+            }
+        }
+
+        numAttempts++;
+
+        if (!isValid) {
+            cout << "Login Invalid, Try Again!" << endl;
+        }
+
+    } while ((numAttempts < 3) && (!isValid));
+
+    if (!isValid) {
+        cout << "Number of attempts exceeded, program terminated!" << endl;
+        exit(0);
+    } else {
+        cout << "\nSuccessful Login!" << endl;
+    }
+}
+
+// ==========================================
+// 3. Questionnaire Class
+// ==========================================
 class Questionnaire {
 private:
     vector<string> stringQuestions;
     vector<string> intQuestions;
     
-    // Store the cleaned answers ready for the generator
     vector<string> cleanStringAnswers;
     vector<string> cleanIntAnswers;
 
 public:
-    // Constructor automatically seeds the random number generator
     Questionnaire() {
         srand(time(0)); 
     }
 
-    // ==========================================
-    // 1. Load Questions from Two Separate Files
-    // ==========================================
     bool loadFiles(string stringFilename, string intFilename) {
         string line;
 
-        // --- Load the String Questions ---
         ifstream sFile(stringFilename);
         if (sFile.is_open()) {
             while (getline(sFile, line)) {
@@ -33,7 +111,6 @@ public:
             return false; 
         }
 
-        // --- Load the Integer Questions ---
         ifstream iFile(intFilename); 
         if (iFile.is_open()) {
             while (getline(iFile, line)) {
@@ -50,23 +127,16 @@ public:
         return true; 
     }
 
-    // Helper function to check if files loaded correctly
     void debugPrintCount() {
         cout << "[SUCCESS] Loaded " << stringQuestions.size() << " String Questions and ";
         cout << intQuestions.size() << " Integer Questions." << endl;
     }
 
-    // ==========================================
-    // 2. Helper Function: Remove Spaces
-    // ==========================================
     string removeSpaces(string input) {
         input.erase(remove_if(input.begin(), input.end(), ::isspace), input.end());
         return input;
     }
 
-    // ==========================================
-    // 3. Run the Survey
-    // ==========================================
     void runSurvey() {
         cleanStringAnswers.clear();
         cleanIntAnswers.clear();
@@ -77,11 +147,8 @@ public:
         cout << "=======================================\n" << endl;
 
         string answer;
-
-        // --- Short term memory for String questions ---
         vector<int> usedStrings; 
         
-        // Ask 3 Random String Questions
         for (int i = 0; i < 3; i++) {
             int randomIndex;
             
@@ -99,10 +166,8 @@ public:
             }
         }
 
-        // --- Short term memory for Integer questions ---
         vector<int> usedInts;
 
-        // Ask 2 Random Integer Questions
         for (int i = 0; i < 2; i++) {
             int randomIndex;
             
@@ -123,20 +188,12 @@ public:
         cout << "\n[SUCCESS] Questionnaire Complete. Data cleaned and prepared for PassForge." << endl;
     } 
 
-    // ==========================================
-    // 4. Getters for the Generator Class
-    // ==========================================
-    vector<string> getStringAnswers() { 
-        return cleanStringAnswers; 
-    }
-    
-    vector<string> getIntAnswers() { 
-        return cleanIntAnswers; 
-    }
+    vector<string> getStringAnswers() { return cleanStringAnswers; }
+    vector<string> getIntAnswers() { return cleanIntAnswers; }
 };
 
 // ==========================================
-// PassForge Password Generator Class
+// 4. Password Generator Class
 // ==========================================
 class PasswordGenerator {
 private:
@@ -144,10 +201,8 @@ private:
     string specialChars = "!@#$%^&*";
 
 public:
-    // This function takes the cleaned answers from the Questionnaire
     void forgePassword(vector<string> stringAnswers, vector<string> intAnswers) {
         
-        // --- The Fallback Safety Net ---
         if (stringAnswers.empty()) {
             stringAnswers.push_back("Passforge"); 
         }
@@ -155,7 +210,6 @@ public:
         if (intAnswers.empty()) {
             intAnswers.push_back(to_string(rand() % 9000 + 1000)); 
         }
-        // ------------------------------------
 
         vector<string> passwordOptions;
 
@@ -163,25 +217,19 @@ public:
             string baseWord = "";
             string numberPart = "";
             
-            // 1. Pick one random word
             if (!stringAnswers.empty()) {
                 int randStringIdx = rand() % stringAnswers.size();
                 baseWord = stringAnswers[randStringIdx];
             }
 
-            // 2. Pick one random number
             if (!intAnswers.empty()) {
                 int randIntIdx = rand() % intAnswers.size();
                 numberPart = intAnswers[randIntIdx];
             }
 
-            // 3. Pick a random special character
             char specialChar = specialChars[rand() % specialChars.length()];
-
-            // 4. MASH THEM TOGETHER
             string tempPassword = baseWord + numberPart + specialChar;
 
-            // 5. SIZE CONTROL
             if (tempPassword.length() > 16) {
                 tempPassword = tempPassword.substr(0, 16);
                 tempPassword[15] = specialChar; 
@@ -195,9 +243,6 @@ public:
             passwordOptions.push_back(tempPassword);
         }
 
-        // ==========================================
-        // The Selection Menu
-        // ==========================================
         cout << "\n==================================================" << endl;
         cout << "   [PASSFORGE] Password Generation Complete" << endl;
         cout << "==================================================" << endl;
@@ -224,12 +269,8 @@ public:
 
         generatedPassword = passwordOptions[choice - 1];
         cout << "\n[SUCCESS] You have selected: " << generatedPassword << endl;
-        
-    } // <--- THIS WAS THE MISSING BRACE!
+    } 
 
-    // ==========================================
-    // Save Password to a CSV File
-    // ==========================================
     void savePassword() {
         char choice;
         cout << "\nWould you like to save this password to your CSV vault? (Y/N): ";
@@ -263,3 +304,38 @@ public:
         }
     }
 };
+
+// ==========================================
+// 5. System Interface (Main)
+// ==========================================
+int main() {
+    vector<User> users;
+    int liu = -1; 
+
+    // Hardcoded test accounts
+    users.push_back(User("215", "Family123", "Dom", "Toretto"));
+    users.push_back(User("U1002", "CatLover_22", "John", "Brown"));
+
+    // 1. Run the Login
+    login(users, liu);
+
+    cout << "Welcome to the system, "
+         << users.at(liu).getFname() << " "
+         << users.at(liu).getLname() << "!" << endl;
+
+    // 2. Run the Questionnaire
+    Questionnaire q;
+    
+    // Ensure these match your GitHub filenames exactly!
+    if (q.loadFiles("Questions_string.csv", "Questionsint.csv")) {
+        q.debugPrintCount();
+        q.runSurvey(); 
+
+        // 3. Run the Generator & Save Protocol
+        PasswordGenerator pg;
+        pg.forgePassword(q.getStringAnswers(), q.getIntAnswers());
+        pg.savePassword();
+    }
+
+    return 0;
+}
