@@ -344,6 +344,36 @@ public:
         generatedPassword = passwordOptions[choice - 1];
 
         cout << "\n[SUCCESS] You have selected: " << generatedPassword << endl;
+// ==========================================
+    // Save Password to a Text File
+    // ==========================================
+    void savePassword() {
+        char choice;
+        cout << "\nWould you like to save this password to your vault? (Y/N): ";
+        cin >> choice;
+
+        if (choice == 'Y' || choice == 'y') {
+            string accountName;
+            cout << "What account is this password for? (e.g., Gmail, Steam): ";
+            
+            // cin >> ws clears the buffer so getline doesn't accidentally skip!
+            getline(cin >> ws, accountName); 
+
+            // 'ios::app' stands for Append. It adds to the bottom of the file 
+            // instead of deleting your old passwords every time it saves!
+            ofstream outFile("MyPasswords.txt", ios::app); 
+
+            if (outFile.is_open()) {
+                outFile << "Account: " << accountName << " | Password: " << generatedPassword << endl;
+                outFile.close();
+                cout << "[SUCCESS] Password safely encrypted in MyPasswords.txt!" << endl;
+            } else {
+                cout << "[ERROR] System could not open the vault file." << endl;
+            }
+        } else {
+            cout << "[INFO] Password discarded. Stay safe!" << endl;
+        }
+    }
     }
 
 int main()
@@ -367,6 +397,8 @@ Questionnaire q;
 
     PasswordGenerator pg;
         pg.forgePassword(q.getStringAnswers(), q.getIntAnswers());
+// NEW: Ask the user if they want to save it!
+        pg.savePassword();
         
     }
 
