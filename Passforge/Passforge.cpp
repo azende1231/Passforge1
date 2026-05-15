@@ -326,8 +326,8 @@ int main() {
     // 2. Run the Questionnaire
     Questionnaire q;
     
-    // Ensure these match your GitHub filenames exactly!
-    if (q.loadFiles("Questions_string.csv", "Questionsint.csv")) {
+    
+    if (q.loadFiles("Questions_string", "Questionsint")) {
         q.debugPrintCount();
         q.runSurvey(); 
 
