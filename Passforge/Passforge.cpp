@@ -252,9 +252,10 @@ private:
     string specialChars = "!@#$%^&*";
 
 public:
-    // This function takes the cleaned answers from the Questionnaire
+   // This function takes the cleaned answers from the Questionnaire
     void forgePassword(vector<string> stringAnswers, vector<string> intAnswers) {
-        // --- NEW: The Fallback Safety Net ---
+        
+        // --- The Fallback Safety Net ---
         // If they skipped all string questions, force a default word
         if (stringAnswers.empty()) {
             stringAnswers.push_back("Passforge"); 
@@ -266,49 +267,84 @@ public:
         }
         // ------------------------------------
 
-        string baseWord = "";
-        string numberPart = "";
-        
-        
-        // 1. Pick one random word from their survey answers
-        if (!stringAnswers.empty()) {
-            int randStringIdx = rand() % stringAnswers.size();
-            baseWord = stringAnswers[randStringIdx];
-        }
+        // Create a digital backpack to hold our 3 password options
+        vector<string> passwordOptions;
 
-        // 2. Pick one random number from their integer answers
-        if (!intAnswers.empty()) {
-            int randIntIdx = rand() % intAnswers.size();
-            numberPart = intAnswers[randIntIdx];
-        }
-
-        // 3. Pick a random special character
-        char specialChar = specialChars[rand() % specialChars.length()];
-
-        // 4. MASH THEM TOGETHER (e.g., "Harrypotter" + "2009" + "!")
-        generatedPassword = baseWord + numberPart + specialChar;
-
-        // 5. SIZE CONTROL (Must be 8 to 16 characters)
-        if (generatedPassword.length() > 16) {
-            // If it's too long, chop it down to exactly 16 characters
-            generatedPassword = generatedPassword.substr(0, 16);
+        // Loop 3 times to generate 3 unique options
+        for (int i = 0; i < 3; i++) {
+            string baseWord = "";
+            string numberPart = "";
             
-            // Force the last character to be the special character for security
-            generatedPassword[15] = specialChar; 
-        } 
-        else if (generatedPassword.length() < 8) {
-            // If it's too short, pad it with extra random numbers until it reaches 8
-            while (generatedPassword.length() < 8) {
-                generatedPassword += to_string(rand() % 10); 
+            // 1. Pick one random word
+            if (!stringAnswers.empty()) {
+                int randStringIdx = rand() % stringAnswers.size();
+                baseWord = stringAnswers[randStringIdx];
+            }
+
+            // 2. Pick one random number
+            if (!intAnswers.empty()) {
+                int randIntIdx = rand() % intAnswers.size();
+                numberPart = intAnswers[randIntIdx];
+            }
+
+            // 3. Pick a random special character
+            char specialChar = specialChars[rand() % specialChars.length()];
+
+            // 4. MASH THEM TOGETHER
+            string tempPassword = baseWord + numberPart + specialChar;
+
+            // 5. SIZE CONTROL
+            if (tempPassword.length() > 16) {
+                tempPassword = tempPassword.substr(0, 16);
+                tempPassword[15] = specialChar; 
+            } 
+            else if (tempPassword.length() < 8) {
+                while (tempPassword.length() < 8) {
+                    tempPassword += to_string(rand() % 10); 
+                }
+            }
+
+            // Save this newly generated password to our options list
+            passwordOptions.push_back(tempPassword);
+        }
+
+        // ==========================================
+        // The Selection Menu
+        // ==========================================
+        cout << "\n==================================================" << endl;
+        cout << "   [PASSFORGE] Password Generation Complete" << endl;
+        cout << "==================================================" << endl;
+        cout << "Please select one of the following secure passwords:\n" << endl;
+
+        // Print the 3 options to the screen
+        for (int i = 0; i < passwordOptions.size(); i++) {
+            cout << "  " << (i + 1) << ". " << passwordOptions[i] << endl;
+        }
+
+        int choice = 0;
+        
+        // This 'while' loop forces the user to pick 1, 2, or 3. 
+        // It won't let them crash the program by typing letters or wrong numbers!
+        while (true) {
+            cout << "\nEnter your choice (1, 2, or 3): ";
+            cin >> choice;
+
+            // Safety check: Did they type a letter or a number out of range?
+            if (cin.fail() || choice < 1 || choice > 3) {
+                cin.clear();             // Clear the error state
+                cin.ignore(10000, '\n'); // Throw away whatever garbage they typed
+                cout << "[ERROR] Invalid input. Please enter 1, 2, or 3." << endl;
+            } else {
+                break; // They picked a valid number, break out of the loop!
             }
         }
 
-        // 6. Print the final result!
-        cout << "\n==================================================" << endl;
-        cout << " [PASSFORGE] Your custom secure password is: " << generatedPassword << endl;
-        cout << "==================================================\n" << endl;
+        // Save their final choice to the official class variable
+        // We subtract 1 because vectors start counting at 0! (Choice 1 = Index 0)
+        generatedPassword = passwordOptions[choice - 1];
+
+        cout << "\n[SUCCESS] You have selected: " << generatedPassword << endl;
     }
-};
 
 int main()
 {
