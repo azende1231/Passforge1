@@ -98,16 +98,13 @@ int main() {
     
     if (q.loadFiles("Questions_string", "Questionsint")) {
         q.debugPrintCount();
-        q.runSurvey(); 
 
-        // 4. Password Generator & Save
-        PasswordGenerator pg;
-        pg.forgePassword(q.getStringAnswers(), q.getIntAnswers());
-        pg.savePassword();
-
-        // 4. Run Again Loop
+        // 4. The "Run Again" Loop!
         char runAgain;
         do {
+            // MOVED INSIDE: Runs a fresh survey every single loop!
+            q.runSurvey(); 
+
             PasswordGenerator pg;
             pg.forgePassword(q.getStringAnswers(), q.getIntAnswers());
             pg.savePassword();
@@ -121,10 +118,6 @@ int main() {
         
         // A nice goodbye message when they finally type 'N'
         cout << "\n[INFO] Thank you for using PassForge. Stay secure!\n" << endl;
-    }
-
-    return 0;
-}
     }
 
     return 0;
