@@ -109,7 +109,7 @@ public:
                 outFile.close();
                 cout << "[SUCCESS] Password safely logged in MyPasswords.csv!" << endl;
             } else {
-                cout << "[ERROR] System could not open the CSV vault." << endl;
+                cout << "[ERROR] System could not open the vault." << endl;
             }
         } else {
             cout << "[INFO] Password discarded. Stay safe!" << endl;
