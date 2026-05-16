@@ -104,6 +104,27 @@ int main() {
         PasswordGenerator pg;
         pg.forgePassword(q.getStringAnswers(), q.getIntAnswers());
         pg.savePassword();
+
+        // 4. Run Again Loop
+        char runAgain;
+        do {
+            PasswordGenerator pg;
+            pg.forgePassword(q.getStringAnswers(), q.getIntAnswers());
+            pg.savePassword();
+
+            // Ask the user if they want to keep going
+            cout << "\n--------------------------------------------------" << endl;
+            cout << "Would you like to generate another password? (Y/N): ";
+            cin >> runAgain;
+            
+        } while (runAgain == 'Y' || runAgain == 'y');
+        
+        // A nice goodbye message when they finally type 'N'
+        cout << "\n[INFO] Thank you for using PassForge. Stay secure!\n" << endl;
+    }
+
+    return 0;
+}
     }
 
     return 0;
