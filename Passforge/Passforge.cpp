@@ -9,6 +9,26 @@
 using namespace std;
 
 // ==========================================
+// PASSFORGE TITLE SCREEN
+// ==========================================
+void welcome()
+{
+    cout << "Welcome to the PassForge System!\n\n" << endl;
+
+    cout << ".----------.  .----------.  .------------. .------------.  .-----------.  .-----------.  .------------." << endl;
+    cout << "| .--------. || .--------. || .----------. || .----------. || .---------. || .---------. || .---------. |" << endl;
+    cout << "| | PPPPPP | || |   AAA  | || | SSSSSSS  | || | SSSSSSS  | || | FFFFFF  | || | OOOOOOO | || | RRRRRR | |" << endl;
+    cout << "| | PP  PP | || |  AA AA | || | SS       | || | SS       | || | FF      | || | OO   OO | || | RR  RR | |" << endl;
+    cout << "| | PPPPPP | || | AAAAAA | || | SSSSSS   | || | SSSSSS   | || | FFFFF   | || | OO   OO | || | RRRRRR | |" << endl;
+    cout << "| | PP     | || | AA  AA | || |      SS  | || |      SS  | || | FF      | || | OO   OO | || | RR  RR | |" << endl;
+    cout << "| | PP     | || | AA  AA | || | SSSSSSS  | || | SSSSSSS  | || | FF      | || | OOOOOOO | || | RR   RR| |" << endl;
+    cout << "| .--------. || .--------. || .----------. || .----------. || .---------. || .---------. || .---------. |" << endl;
+    cout << ".----------.  .----------.  .------------. .------------.  .-----------.  .-----------.  .------------." << endl;
+
+    cout << "\n";
+}
+
+// ==========================================
 // 1. User Class
 // ==========================================
 class User {
@@ -306,7 +326,7 @@ public:
 };
 
 // ==========================================
-// 5. System Interface (Main)
+// 5. Main
 // ==========================================
 int main() {
     vector<User> users;
@@ -316,26 +336,32 @@ int main() {
     users.push_back(User("215", "Family123", "Dom", "Toretto"));
     users.push_back(User("U1002", "CatLover_22", "John", "Brown"));
 
-    // 1. Run the Login
+    // PASSFORGE TITLE SCREEN
+    welcome();
+
+    // Login
     login(users, liu);
 
     cout << "Welcome to the system, "
          << users.at(liu).getFname() << " "
          << users.at(liu).getLname() << "!" << endl;
 
-    // 2. Run the Questionnaire
+    // Questionnaire
     Questionnaire q;
-    
     
     if (q.loadFiles("Questions_string", "Questionsint")) {
         q.debugPrintCount();
         q.runSurvey(); 
 
-        // 3. Run the Generator & Save Protocol
+        // Password Generator
         PasswordGenerator pg;
         pg.forgePassword(q.getStringAnswers(), q.getIntAnswers());
+
+        // Save Password
         pg.savePassword();
     }
 
+    return 0;
+}
     return 0;
 }
