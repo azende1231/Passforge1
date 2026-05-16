@@ -85,7 +85,7 @@ public:
 
     void savePassword() {
         char choice;
-        cout << "\nWould you like to save this password to your CSV vault? (Y/N): ";
+        cout << "\nWould you like to save this password to your vault? (Y/N): ";
         cin >> choice;
 
         if (choice == 'Y' || choice == 'y') {
