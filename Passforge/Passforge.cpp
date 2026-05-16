@@ -77,7 +77,11 @@ int main() {
 
     // Hardcoded test accounts
     users.push_back(User("215", "Family123", "Dom", "Toretto"));
-    users.push_back(User("U1002", "CatLover_22", "John", "Brown"));
+    users.push_back(User("184", "1upshroom", "Mario", "Bennet"));
+    users.push_back(User("237", "JohnnyWhiskey1977", "Jack", "Torrance"));
+    users.push_back(User("267", "lawyer456", "Mike", "Ross"));
+    users.push_back(User("517", "Ranch517", "John", "Dutton"));
+    users.push_back(User("192", "goku2007pink", "Jane", "Steves"));
 
     // 1. Title Screen
     welcome();
